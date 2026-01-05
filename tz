@@ -1,0 +1,53 @@
+Архитектура:
+    models
+        base.py
+        habit.py
+
+    schemas
+        habit_schema.py
+
+    services
+        habit_service.py
+
+    storage
+        habit_storage.py
+
+    main.py
+
+Models(наследование):
+
+BaseHabit - Абстрактный базовый класс
+id: int
+name: str
+Методы:
+to_dict
+from_dict
+
+DailyHabit(BaseHabit)
+completed_days: int
+target_days: int
+Методы:
+mark_done() - увеличивает completed_days
+is_completed() - bool
+
+
+Валидация:
+name - не пустая строка
+goal_days > 0
+completed_days >= 0
+
+Service layer(самое важное)
+
+HabitService
+
+Методы:
+create_habit(schema: HabitCreateSchema)
+get_all_habits()
+mark_habit_done(habit_id: int)
+get_completed_habits()
+
+Доп уровень(по желанию)
+property + setter для completed_days
+сортировка привычек по прогрессу
+обработка ошибок (habit не найден)
+
