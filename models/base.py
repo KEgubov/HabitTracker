@@ -2,7 +2,8 @@ from datetime import datetime
 
 
 class BaseHabit:
-    def __init__(self, habit_name: str, habit_description: str, category: str) -> None:
+    def __init__(self, habit_name: str, habit_description: str, category: str,
+                 completed=False) -> None:
         self.habit_name = habit_name
         self.habit_description = habit_description
         # self.category - группировка: здоровье, продуктивность, спорт
