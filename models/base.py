@@ -33,3 +33,14 @@ class DailyHabit(BaseHabit):
         # например при достижении 7 дней, цель становится сразу 14 дней и т.д
         self.goal_days = goal_days
         self.created_at = datetime.now()
+
+
+class WeeklyHabit(BaseHabit):
+    def __init__(
+        self, habit_id: int, habit_name: str, habit_description: str, category: str
+    ) -> None:
+        super().__init__(habit_name, habit_description, category)
+        self.habit_id = habit_id
+        self.weekly_streak = 0
+        self.created_at = datetime.now()
+        self.deadline = self.created_at + timedelta(weeks=1)
