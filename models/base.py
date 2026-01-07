@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class BaseHabit:
@@ -6,11 +6,8 @@ class BaseHabit:
                  completed=False) -> None:
         self.habit_name = habit_name
         self.habit_description = habit_description
-        # self.category - группировка: здоровье, продуктивность, спорт
-        # в schema через enum можно создать определённые значения для этого
-        # атрибута
         self.category = category
-        self.completed = False
+        self.completed = completed
 
 
 # self.completed по умолчанию False, как только user отмечает привычку выполненной
@@ -32,6 +29,8 @@ class DailyHabit(BaseHabit):
         # в self.goal_days тоже можно сделать разделение через Enum
         # например: 7дн, 14дн, 30дн и т.д, возможно цель будет ставиться автоматически
         # например при достижении 7 дней, цель становится сразу 14 дней и т.д
+        # например: если стрик равен 7, то self.goal_days == 14
+        # можно добавить систему ачивок при достижении цели (self.goal_days)
         self.goal_days = goal_days
         self.created_at = datetime.now()
 
