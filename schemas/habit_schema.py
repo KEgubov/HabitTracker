@@ -10,12 +10,12 @@ class CategoryHabit(Enum):
     FINANCE = "finance"
 
 class GoalDaysHabit(Enum):
-    ONE_DAY = "one-day"
-    SEVEN_DAYS = "7 days"
-    TWO_WEEK = "2 weeks"
-    ONE_MONTH = "1 month"
-    SIX_MONTHS = "6 months"
-    ONE_YEAR = "1 year"
+    ONE_DAY = 1
+    ONE_WEEK = 7
+    TWO_WEEK = 14
+    ONE_MONTH = 30
+    SIX_MONTHS = 180
+    ONE_YEAR = 365
 
 class DailyHabitSchema(BaseModel):
     habit_id: Annotated[int, Field(ge=0)]
