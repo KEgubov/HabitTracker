@@ -2,6 +2,10 @@ from pydantic import BaseModel, Field
 from typing import Annotated
 from enum import Enum
 
+class TypeHabit(Enum):
+    DAILY = "daily"
+    WEEKLY = "weekly"
+
 class CategoryHabit(Enum):
     HEALTH = "health"
     PRODUCTIVITY = "productivity"
