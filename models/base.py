@@ -69,17 +69,17 @@ class DailyHabit(BaseHabit):
         """
         Refreshes the target when a specific streak is reached
         """
-        if self.streak == 1:
+        if self.streak >= 1:
             self.goal_days = GoalDaysHabit.ONE_WEEK
-        elif self.streak == 7:
+        elif self.streak >= 7:
             self.goal_days = GoalDaysHabit.TWO_WEEK
-        elif self.streak == 14:
+        elif self.streak >= 14:
             self.goal_days = GoalDaysHabit.ONE_MONTH
-        elif self.streak == 30:
+        elif self.streak >= 30:
             self.goal_days = GoalDaysHabit.SIX_MONTHS
-        elif self.streak == 180:
+        elif self.streak >= 180:
             self.goal_days = GoalDaysHabit.ONE_YEAR
-        elif self.streak == 365:
+        elif self.streak >= 365:
             return (
                 f"Hey there!\n\n"
                 f"Imagine this: exactly one year ago, you took your first step.\n"
@@ -107,6 +107,24 @@ class DailyHabit(BaseHabit):
                 f"It’s time to finish what you started. Go for it!"
             )
         return None
+
+    def to_dict(self) -> dict:
+        return {
+            "habit_id": self.habit_id,
+            "habit_name": self.habit_name,
+            "habit_description": self.habit_description,
+            "category": self.category,
+            "type_habit": self.type_habit,
+            "completed": self.completed,
+            "streak": self.streak,
+            "goal_days": self.goal_days,
+            "created_at": self.created_at.isoformat(timespec="seconds"),
+            "last_completed": (
+                self.last_completed.isoformat(timespec="seconds")
+                if self.last_completed is not None
+                else None
+            ),
+        }
 
 #  IN DEVELOPMENT
 class WeeklyHabit(BaseHabit):
