@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 from schemas.habit_schema import GoalDaysHabit, TypeHabit, CategoryHabit
-from typing import Optional
 
 
 class BaseHabit:
@@ -19,7 +18,7 @@ class BaseHabit:
         self.type_habit = type_habit
         self.completed = completed
         self.created_at = datetime.now()
-        self.last_completed: Optional[datetime] = None
+        self.last_completed = None # FIX ME
 
 
 class DailyHabit(BaseHabit):
@@ -51,11 +50,7 @@ class DailyHabit(BaseHabit):
             "streak": self.streak,
             "goal_days": self.goal_days,
             "created_at": self.created_at.isoformat(timespec="seconds"),
-            "last_completed": (
-                self.last_completed.isoformat(timespec="seconds")
-                if self.last_completed is not None
-                else None
-            ),
+            "last_completed": self.last_completed # FIX ME
         }
 
 #  IN DEVELOPMENT

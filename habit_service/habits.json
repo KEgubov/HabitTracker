@@ -1,1 +1,14 @@
-[]
+[
+    {
+        "habit_id": 1,
+        "habit_name": "test",
+        "habit_description": "test",
+        "category": "health",
+        "type_habit": "daily",
+        "completed": false,
+        "streak": 12,
+        "goal_days": 14,
+        "created_at": "2026-01-13T22:19:29",
+        "last_completed": "2026-01-13T22:21:36"
+    }
+]
