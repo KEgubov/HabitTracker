@@ -3,14 +3,16 @@ from typing import Optional
 from habit_storage.json_storage import HabitJsonStorage
 from models.base import DailyHabit, CategoryHabit
 from schemas.habit_schema import DailyHabitSchema, GoalDaysHabit
+
 # Проверить работает ли валидация
+
 
 class HabitService:
     def __init__(self, storage: HabitJsonStorage):
         self.storage = storage
         self.habits_data = storage.load()
 
-    def increase_streak(self) -> str:
+    def increase_streak(self, habit_id: int) -> str:
         """
         Method:
         Checks the validity of the series.
@@ -18,13 +20,13 @@ class HabitService:
         Refreshes the target.
         """
         for habit in self.habits_data:
-            if habit["completed"]:
-                self.check_streak_validity()
-                habit["streak"] += 1
-                self.update_goal_days()
-                habit["last_completed"] = datetime.now().isoformat(timespec="seconds")
-                habit["completed"] = False
-            return f"Current streak - {habit["streak"]} days"
+            if habit["habit_id"] == habit_id and habit["completed"]:
+                if self.check_streak_validity():
+                    habit["streak"] += 1
+                    self.update_goal_days()
+                    habit["last_completed"] = datetime.now().isoformat(timespec="seconds")
+                    habit["completed"] = False
+                return f"Current streak - {habit["streak"]} days"
         return f"Current streak - no streak"
 
     def check_streak_validity(self) -> bool:
@@ -122,13 +124,12 @@ class HabitService:
         return "Habit not found!"
 
     def complete_habit(self, habit_id: int):
-        for i, habit in enumerate(self.habits_data):
+        for habit in self.habits_data:
             if habit["habit_id"] == habit_id:
                 habit["completed"] = True
-                message = self.increase_streak()
+                message = self.increase_streak(habit_id)
                 self.storage.save(self.habits_data)
-                return (f"Habit - '{habit["habit_name"]}' Completed!"
-                        f"\n{message}")
+                return f"Habit - '{habit["habit_name"]}' Completed!" f"\n{message}"
         return "Habit not found!"
 
 

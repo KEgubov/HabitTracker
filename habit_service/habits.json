@@ -6,9 +6,21 @@
         "category": "health",
         "type_habit": "daily",
         "completed": false,
-        "streak": 12,
+        "streak": 14,
+        "goal_days": 30,
+        "created_at": "2026-01-14T21:07:20",
+        "last_completed": "2026-01-14T21:07:52"
+    },
+    {
+        "habit_id": 2,
+        "habit_name": "test",
+        "habit_description": "test",
+        "category": "health",
+        "type_habit": "daily",
+        "completed": false,
+        "streak": 7,
         "goal_days": 14,
-        "created_at": "2026-01-13T22:19:29",
-        "last_completed": "2026-01-13T22:21:36"
+        "created_at": "2026-01-14T21:07:22",
+        "last_completed": "2026-01-14T21:07:34"
     }
 ]
