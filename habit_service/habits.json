@@ -6,10 +6,10 @@
         "category": "health",
         "type_habit": "daily",
         "completed": false,
-        "streak": 14,
-        "goal_days": 30,
-        "created_at": "2026-01-14T21:07:20",
-        "last_completed": "2026-01-14T21:07:52"
+        "streak": 365,
+        "goal_days": 365,
+        "created_at": "2026-01-15T17:27:55",
+        "last_completed": "2026-01-15T17:33:54"
     },
     {
         "habit_id": 2,
@@ -18,9 +18,9 @@
         "category": "health",
         "type_habit": "daily",
         "completed": false,
-        "streak": 7,
-        "goal_days": 14,
-        "created_at": "2026-01-14T21:07:22",
-        "last_completed": "2026-01-14T21:07:34"
+        "streak": 0,
+        "goal_days": 1,
+        "created_at": "2026-01-15T17:52:46",
+        "last_completed": null
     }
 ]
