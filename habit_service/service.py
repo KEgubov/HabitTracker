@@ -48,50 +48,19 @@ class HabitService:
                 return False
         return True
 
-    # Добавить оповещение пользователя о новой цели
-    def update_goal_days(self) -> Optional[str]:
-        """
-        Refreshes the target when a specific streak is reached
-        """
-        for habit in self.habits_data:
-            if habit["streak"] == 1:
-                habit["goal_days"] = GoalDaysHabit.ONE_WEEK
-            elif habit["streak"] == 7:
-                habit["goal_days"] = GoalDaysHabit.TWO_WEEK
-            elif habit["streak"] == 14:
-                habit["goal_days"] = GoalDaysHabit.ONE_MONTH
-            elif habit["streak"] == 30:
-                habit["goal_days"] = GoalDaysHabit.SIX_MONTHS
-            elif habit["streak"] == 180:
-                habit["goal_days"] = GoalDaysHabit.ONE_YEAR
-            elif habit["streak"] == 365:
-                return (
-                    f"Hey there!\n\n"
-                    f"Imagine this: exactly one year ago, you took your first step.\n"
-                    f"\tBack then, 365 days felt like an eternity.\n"
-                    f"\tYou had no idea if you’d make it to the end.\n"
-                    f"\tBut you decided to give it a shot — and you started walking.\n\n"
-                    f"\tDay after day, you kept going.\n"
-                    f"\tThere were moments when you wanted to quit.\n"
-                    f"\tTimes when it felt like you weren’t making any progress.\n"
-                    f"\tInstances when fatigue whispered, «Take a break, it’s not urgent.»\n"
-                    f"\tBut you kept pushing forward. Every single day. No exceptions.\n\n"
-                    f"\tAnd now — you’re on the home stretch.\n\n"
-                    f"Look at what you’ve achieved:\n"
-                    f"\t-- You proved to yourself that you can keep your word;\n"
-                    f"\t-- You forged ironclad discipline;\n"
-                    f"\t-- You turned action into habit, and habit into a way of life.\n\n"
-                    f"This year isn’t just a mark on the calendar.\n"
-                    f"\tIt’s your personal victory.\n"
-                    f"\tA victory over laziness, doubts, and the habit of postponing things.\n"
-                    f"\tYou’ve shown what you’re capable of when you go all the way.\n\n"
-                    f"One final push. You’re almost there. Take a deep breath — and take those last steps.\n"
-                    f"\tYou’ve earned the right to say:\n"
-                    f"\t«I completed the entire journey.»\n\n"
-                    f"You’re doing great. I believe in you.\n"
-                    f"It’s time to finish what you started. Go for it!"
-                )
-        return None
+    def update_goal_days(self, habit) -> Optional[str]:
+        goal_map = {
+            1: GoalDaysHabit.ONE_WEEK,
+            7: GoalDaysHabit.TWO_WEEK,
+            14: GoalDaysHabit.ONE_MONTH,
+            30: GoalDaysHabit.SIX_MONTHS,
+            180: GoalDaysHabit.ONE_YEAR,
+        }
+        for days, goal in goal_map.items():
+            if habit["streak"] == days:
+                habit["goal_days"] = goal
+                return f"Congratulations! You've reached your goal! New target - {goal.value} days!"
+        return f"Current streak - {habit["streak"]} days"
 
     def generate_id(self):
         if self.habits_data:
