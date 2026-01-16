@@ -92,6 +92,9 @@ class HabitService:
                 return f"Habit - {habit["habit_name"]} removed!"
         return "Habit not found!"
 
+    def remove_all_habits(self):
+        return self.storage.clear()
+
     def complete_habit(self, habit_id: int):
         for habit in self.habits_data:
             if habit["habit_id"] == habit_id:
