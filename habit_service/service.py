@@ -114,7 +114,23 @@ class HabitService:
                     f"\nStreak - {habit['streak']} days"
                     f"\nGoal - {habit['goal_days']} days"
                 )
-        return "Habit not found!"
+        return result
+
+    def show_all_habits(self):
+        if not self.habits_data:
+            return f"Habits not found!"
+        result = "All Habits:\n"
+        for habit in self.habits_data:
+            result += (
+                f"\nID: {habit['habit_id']} | "
+                f"Name: {habit['habit_name']} | "
+                f"Category: {habit['category']} | "
+                f"Streak: {habit['streak']} days"
+            )
+        return result
+    
+    # ДОБАВИТЬ ГРУППИРОВКУ ПО ПРИВЫЧКАМ
+
 
 hs = HabitService(HabitJsonStorage())
 # print(hs.create_habit(DailyHabitSchema(habit_name="test",
