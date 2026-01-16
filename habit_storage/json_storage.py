@@ -20,3 +20,7 @@ class HabitJsonStorage:
     def save(self, habit):
         with open(self.file, "w", encoding="utf-8") as f:
             json.dump(habit, f, ensure_ascii=False, indent=4)
+
+    def clear(self):
+        self.save([])
+        return f"All Habits cleared!"
