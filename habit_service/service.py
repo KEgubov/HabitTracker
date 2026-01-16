@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Optional
 from habit_storage.json_storage import HabitJsonStorage
-from models.base import DailyHabit, CategoryHabit
-from schemas.habit_schema import DailyHabitSchema, GoalDaysHabit
+from models.base import DailyHabit
+from schemas.habit_schema import DailyHabitSchema, GoalDaysHabit, CategoryHabit
 
 
 class HabitService:
@@ -10,7 +10,7 @@ class HabitService:
         self.storage = storage
         self.habits_data = storage.load()
 
-    def increase_streak(self, habit_id: int) -> str:
+    def _increase_streak(self, habit_id: int) -> str:
         """
         Method:
         Checks the validity of the series.
@@ -19,9 +19,9 @@ class HabitService:
         """
         for habit in self.habits_data:
             if habit["habit_id"] == habit_id and habit["completed"]:
-                if self.check_streak_validity():
+                if self._check_streak_validity():
                     habit["streak"] += 1
-                    message = self.update_goal_days(habit)
+                    message = self._update_goal_days(habit)
                     habit["last_completed"] = datetime.now().isoformat(
                         timespec="seconds"
                     )
@@ -29,7 +29,7 @@ class HabitService:
                     return f"\n{message}"
         return f"Current streak - no streak"
 
-    def check_streak_validity(self) -> bool:
+    def _check_streak_validity(self) -> bool:
         """
         Series Verification
         """
@@ -48,7 +48,7 @@ class HabitService:
                 return False
         return True
 
-    def update_goal_days(self, habit) -> Optional[str]:
+    def _update_goal_days(self, habit) -> Optional[str]:
         goal_map = {
             1: GoalDaysHabit.ONE_WEEK,
             7: GoalDaysHabit.TWO_WEEK,
@@ -59,7 +59,10 @@ class HabitService:
         for days, goal in goal_map.items():
             if habit["streak"] == days:
                 habit["goal_days"] = goal
-                return f"Congratulations! You've reached your goal! New target - {goal.value} days!"
+                return (
+                    f"Congratulations! You've reached your goal! "
+                    f"New target - {goal.value} days!"
+                )
         return f"Current streak - {habit["streak"]} days"
 
     def generate_id(self):
@@ -99,20 +102,22 @@ class HabitService:
         for habit in self.habits_data:
             if habit["habit_id"] == habit_id:
                 habit["completed"] = True
-                message = self.increase_streak(habit_id)
+                message = self._increase_streak(habit_id)
                 self.storage.save(self.habits_data)
                 return f"Habit - '{habit["habit_name"]}' Completed!" f"{message}"
         return "Habit not found!"
 
     def show_habit(self, habit_id: int):
+        if not self.habits_data:
+            return f"Habits not found!"
+        result = "Habit:\n"
         for habit in self.habits_data:
             if habit["habit_id"] == habit_id:
-                return (
-                    f"Habit Information: "
-                    f"\nHabit - '{habit["habit_name"]}'"
-                    f"\nDescription - '{habit['habit_description']}'"
-                    f"\nStreak - {habit['streak']} days"
-                    f"\nGoal - {habit['goal_days']} days"
+                result += (
+                    f"\nID: {habit['habit_id']} | "
+                    f"Name: {habit['habit_name']} | "
+                    f"Category: {habit['category']} | "
+                    f"Streak: {habit['streak']} days"
                 )
         return result
 
@@ -128,7 +133,7 @@ class HabitService:
                 f"Streak: {habit['streak']} days"
             )
         return result
-    
+
     # ДОБАВИТЬ ГРУППИРОВКУ ПО ПРИВЫЧКАМ
 
 
@@ -136,6 +141,8 @@ hs = HabitService(HabitJsonStorage())
 # print(hs.create_habit(DailyHabitSchema(habit_name="test",
 #                                        habit_description="test",
 #                                        category=CategoryHabit.HEALTH)))
-# print(hs.complete_habit(1))
+# print(hs.complete_habit(3))
 # print(hs.remove_habit(1))
 # print(hs.show_habit(1))
+# print(hs.show_all_habits())
+# print(hs.remove_all_habits())

@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+
 class HabitJsonStorage:
     def __init__(self, filename="habits.json"):
         self.filename = filename
@@ -15,7 +16,6 @@ class HabitJsonStorage:
                 return json.load(f)
         except json.JSONDecodeError as e:
             print(f"Failed to load {self.filename}: {e}")
-
 
     def save(self, habit):
         with open(self.file, "w", encoding="utf-8") as f:
