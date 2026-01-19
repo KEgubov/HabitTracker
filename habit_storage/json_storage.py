@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 class HabitJsonStorage:
-    def __init__(self, filename="habits.json"):
+    def __init__(self, filename="habits.json") -> None:
         self.filename = filename
         self.file = Path(filename)
 
@@ -21,6 +21,6 @@ class HabitJsonStorage:
         with open(self.file, "w", encoding="utf-8") as f:
             json.dump(habit, f, ensure_ascii=False, indent=4)
 
-    def clear(self):
+    def clear(self) -> str:
         self.save([])
         return f"All Habits cleared!"
