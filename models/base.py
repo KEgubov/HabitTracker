@@ -28,7 +28,7 @@ class DailyHabit(BaseHabit):
         habit_description: str,
         category: CategoryHabit,
         streak: int = 0,
-        goal_days: GoalDaysHabit = GoalDaysHabit.ONE_DAY,
+        current_goal_days: GoalDaysHabit = GoalDaysHabit.ONE_DAY,
     ) -> None:
         super().__init__(
             habit_name,
@@ -38,7 +38,7 @@ class DailyHabit(BaseHabit):
         )
         self.habit_id = habit_id
         self.streak = streak
-        self.goal_days = goal_days
+        self.current_goal_days = current_goal_days
 
     def to_dict(self) -> dict:
         return {
@@ -49,7 +49,7 @@ class DailyHabit(BaseHabit):
             "type_habit": self.type_habit,
             "completed": self.completed,
             "streak": self.streak,
-            "goal_days": self.goal_days,
+            "current_goal_days": self.current_goal_days,
             "created_at": self.created_at.isoformat(timespec="seconds"),
             "last_completed": self.last_completed,  # FIX ME
         }

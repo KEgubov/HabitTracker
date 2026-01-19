@@ -57,7 +57,7 @@ class HabitService:
         }
         for days, goal in goal_map.items():
             if habit["streak"] == days:
-                habit["goal_days"] = goal
+                habit["current_goal_days"] = goal
                 return (
                     f"Congratulations! You've reached your goal! "
                     f"New target - {goal.value} days!"
@@ -147,7 +147,7 @@ hs = HabitService(HabitJsonStorage())
 #                                        habit_description="test",
 #                                        category=CategoryHabit.PRODUCTIVITY)))
 # print(hs.complete_habit(2))
-# print(hs.remove_habit(1))
+print(hs.remove_habit(1))
 # print(hs.show_habit(1))
-print(hs.show_all_habits())
+# print(hs.show_all_habits())
 # print(hs.remove_all_habits())
