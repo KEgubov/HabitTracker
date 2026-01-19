@@ -29,7 +29,7 @@ class DailyHabit(BaseHabit):
         category: CategoryHabit,
         streak: int = 0,
         goal_days: GoalDaysHabit = GoalDaysHabit.ONE_DAY,
-    ):
+    ) -> None:
         super().__init__(
             habit_name,
             habit_description,
