@@ -1,7 +1,12 @@
 from datetime import datetime
 from habit_storage.json_storage import HabitJsonStorage
 from models.base import DailyHabit
-from schemas.habit_schema import DailyHabitSchema, GoalDaysHabit, CategoryHabit
+from schemas.habit_schema import (
+    DailyHabitSchema,
+    GoalDaysHabit,
+    CategoryHabit,
+    AchievementHabit,
+)
 
 
 class HabitService:
@@ -20,13 +25,23 @@ class HabitService:
             if habit["habit_id"] == habit_id and habit["completed"]:
                 if self._check_streak_validity():
                     habit["streak"] += 1
-                    message = self._update_goal_days(habit)
+
+                    messages = []
+                    message_achievement = self._update_achievements(habit)
+                    if message_achievement:
+                        messages.append(message_achievement)
+
+                    message_goal_days = self._update_goal_days(habit)
+                    if message_goal_days:
+                        messages.append(message_goal_days)
+
                     habit["last_completed"] = datetime.now().isoformat(
                         timespec="seconds"
                     )
                     habit["completed"] = False
-                    return f"\n{message}"
-        return f"Current streak - no streak"
+                    if messages:
+                        return "\n".join(messages)
+        return ""
 
     def _check_streak_validity(self) -> bool:
         """
@@ -120,7 +135,11 @@ class HabitService:
                 habit["completed"] = True
                 message = self._increase_streak(habit_id)
                 self.storage.save(self.habits_data)
-                return f"Habit - '{habit['habit_name']}' Completed!" f"{message}"
+                if message:
+                    return f"Habit - '{habit['habit_name']}' Completed!\n{message}"
+                else:
+                    return f"Habit - '{habit['habit_name']}' Completed!"
+
         return "Habit not found!"
 
     def show_habit(self, habit_id: int) -> str:
@@ -160,11 +179,17 @@ class HabitService:
 
 
 hs = HabitService(HabitJsonStorage())
-# print(hs.create_habit(DailyHabitSchema(habit_name="test",
-#                                        habit_description="test",
-#                                        category=CategoryHabit.PRODUCTIVITY)))
-# print(hs.complete_habit(2))
-print(hs.remove_habit(1))
+# print(
+#     hs.create_habit(
+#         DailyHabitSchema(
+#             habit_name="test",
+#             habit_description="test",
+#             category=CategoryHabit.PRODUCTIVITY,
+#         )
+#     )
+# )
+# print(hs.complete_habit(1))
+# print(hs.remove_habit(1))
 # print(hs.show_habit(1))
 # print(hs.show_all_habits())
-# print(hs.remove_all_habits())
+print(hs.remove_all_habits())
