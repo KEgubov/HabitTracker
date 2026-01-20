@@ -64,6 +64,22 @@ class HabitService:
                 )
         return f"Current streak - {habit['streak']} days"
 
+    def _update_achievements(self, habit: dict) -> str | None:
+        achievement_map = {
+            1: AchievementHabit.ONE_DAY,
+            7: AchievementHabit.ONE_WEEK,
+            21: AchievementHabit.THREE_WEEKS,
+            30: AchievementHabit.ONE_MONTH,
+            60: AchievementHabit.TWO_MONTHS,
+            180: AchievementHabit.SIX_MONTHS,
+            365: AchievementHabit.ONE_YEAR,
+        }
+        for days, achievement in achievement_map.items():
+            if habit["streak"] == days:
+                habit["achievement"] = achievement
+                return f"You have received a new achievement - {achievement.value}!"
+        return None
+
     def generate_id(self) -> int:
         if self.habits_data:
             try:
