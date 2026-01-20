@@ -50,9 +50,10 @@ class HabitService:
     def _update_goal_days(self, habit: dict) -> str:
         goal_map = {
             1: GoalDaysHabit.ONE_WEEK,
-            7: GoalDaysHabit.TWO_WEEK,
-            14: GoalDaysHabit.ONE_MONTH,
-            30: GoalDaysHabit.SIX_MONTHS,
+            7: GoalDaysHabit.THREE_WEEKS,
+            21: GoalDaysHabit.ONE_MONTH,
+            30: GoalDaysHabit.TWO_MONTHS,
+            60: GoalDaysHabit.SIX_MONTHS,
             180: GoalDaysHabit.ONE_YEAR,
         }
         for days, goal in goal_map.items():
