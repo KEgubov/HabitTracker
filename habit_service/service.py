@@ -177,19 +177,11 @@ class HabitService:
 
         return result.rstrip()
 
-
-hs = HabitService(HabitJsonStorage())
-# print(
-#     hs.create_habit(
-#         DailyHabitSchema(
-#             habit_name="test",
-#             habit_description="test",
-#             category=CategoryHabit.PRODUCTIVITY,
-#         )
-#     )
-# )
-# print(hs.complete_habit(1))
-# print(hs.remove_habit(1))
-# print(hs.show_habit(1))
-# print(hs.show_all_habits())
-print(hs.remove_all_habits())
+    def show_achievement(self) -> str:
+        achievement = defaultdict(list)
+        for habit in self.habits_data:
+            achievement["Achievement"].append(habit["achievement"])
+        for k, v in achievement.items():
+            return (f"{k}: "
+                    f"\n{v}")
+        return "Achievement not found!"
