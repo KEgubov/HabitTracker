@@ -4,10 +4,9 @@ from models.base import DailyHabit
 from schemas.habit_schema import (
     DailyHabitSchema,
     GoalDaysHabit,
-    CategoryHabit,
     AchievementHabit,
 )
-
+from collections import defaultdict
 
 class HabitService:
     def __init__(self, storage: HabitJsonStorage) -> None:
@@ -174,7 +173,6 @@ class HabitService:
                     f"Streak: {habit['streak']} days\n"
                 )
             result += "\n"
-
         return result.rstrip()
 
     def show_achievement(self) -> str:
