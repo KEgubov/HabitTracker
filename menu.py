@@ -2,6 +2,7 @@ from habit_service.service import HabitService
 from habit_storage.json_storage import HabitJsonStorage
 from schemas.habit_schema import CategoryHabit, DailyHabitSchema
 
+
 def menu():
     print("=" * 10, "MENU", "=" * 10)
     print("1. Create Habit")
@@ -26,11 +27,13 @@ def category_menu():
     print("7. Exit to main menu")
     print("=" * 10, "CATEGORY", "=" * 10)
 
+
 def remove_all_habits_menu():
     print("=" * 10, "Do you want to delete the habit?", "=" * 10)
     print("1. Yes")
     print("2. No")
     print("=" * 54)
+
 
 def show_habit_menu():
     habit_service = HabitService(HabitJsonStorage())
