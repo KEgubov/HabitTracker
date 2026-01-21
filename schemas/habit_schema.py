@@ -12,6 +12,7 @@ class CategoryHabit(str, Enum):
     SPORTS = "sports"
     SELF_DEVELOPMENT = "self development"
     FINANCE = "finance"
+    OTHER = "other"
 
 class GoalDaysHabit(int, Enum):
     ONE_DAY = 1
