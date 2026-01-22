@@ -6,13 +6,12 @@ from schemas.habit_schema import CategoryHabit, DailyHabitSchema
 def menu():
     print("=" * 10, "MENU", "=" * 10)
     print("1. Create Habit")
-    print("2. Remove Habit")
-    print("3. Remove All Habits")
-    print("4. Complete Habit")
-    print("5. Show Habit")
-    print("6. Show All Habits")
-    print("7. Achievement")
-    print("8. Exit")
+    print("2. Delete Habits Menu")
+    print("3. Complete Habit")
+    print("4. Show Habit")
+    print("5. Show All Habits")
+    print("6. Achievement")
+    print("7. Exit")
     print("=" * 10, "MENU", "=" * 10)
 
 
@@ -28,7 +27,15 @@ def category_menu():
     print("=" * 10, "CATEGORY", "=" * 10)
 
 
-def remove_all_habits_menu():
+def delete_habits_menu():
+    print("=" * 10, "DELETE HABIT", "=" * 10)
+    print("1. Delete Habit")
+    print("2. Delete All Habits")
+    print("3. Exit to main menu")
+    print("=" * 10, "DELETE HABIT", "=" * 10)
+
+
+def delete_all_habits_menu():
     print("=" * 10, "Do you want to delete the habit?", "=" * 10)
     print("1. Yes")
     print("2. No")
@@ -81,39 +88,48 @@ def show_habit_menu():
                 )
                 break
         elif choice == "2":
-            habit_id = int(input("Enter your habit id for delete: "))
-            habit_service.remove_habit(habit_id)
-
-        elif choice == "3":
             while True:
-
-                remove_all_habits_menu()
+                delete_habits_menu()
                 choice = input("Enter your choice: ")
+
                 if choice == "1":
-                    print(habit_service.remove_all_habits())
-                    show_habit_menu()
+                    habit_id = int(input("Enter your habit id for delete: "))
+                    print(habit_service.delete_habit(habit_id))
+
                 elif choice == "2":
+                    delete_all_habits_menu()
+                    choice = input("Enter your choice: ")
+                    if choice == "1":
+                        print(habit_service.delete_all_habits())
+                        break
+                    elif choice == "2":
+                        print("Exiting to main menu...")
+                        break
+                    else:
+                        print("Invalid choice") # ??????
+                elif choice == "3":
                     print("Exiting to main menu...")
                     break
                 else:
                     print("Invalid choice")
-                    continue
+                continue
 
-        elif choice == "4":
+        elif choice == "3":
             habit_id = int(input("Enter the habit id to perform: "))
             print(habit_service.complete_habit(habit_id))
 
-        elif choice == "5":
+        elif choice == "4":
             habit_id = int(input("Enter the habit id to show: "))
             print(habit_service.show_habit(habit_id))
 
-        elif choice == "6":
+        elif choice == "5":
             print(habit_service.show_all_habits())
 
-        elif choice == "7":
-            print(habit_service.show_achievement())
+        elif choice == "6":
+            habit_id = int(input("Enter the habit id: "))
+            print(habit_service.show_achievement(habit_id))
 
-        elif choice == "8":
+        elif choice == "7":
             exit("Thank you for using this program!")
 
         else:
