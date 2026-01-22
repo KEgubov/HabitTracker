@@ -79,6 +79,7 @@ def show_habit_menu():
                         )
                     )
                 )
+                break
         elif choice == "2":
             habit_id = int(input("Enter your habit id for delete: "))
             habit_service.remove_habit(habit_id)
