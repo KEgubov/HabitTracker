@@ -6,7 +6,7 @@ from schemas.habit_schema import (
     GoalDaysHabit,
     AchievementHabit,
 )
-from collections import defaultdict
+
 
 class HabitService:
     def __init__(self, storage: HabitJsonStorage) -> None:
@@ -91,7 +91,7 @@ class HabitService:
         }
         for days, achievement in achievement_map.items():
             if habit["streak"] == days:
-                habit["achievement"] = achievement
+                habit["achievement"].append(achievement)
                 return f"You have received a new achievement - {achievement.value}!"
         return None
 
@@ -117,7 +117,7 @@ class HabitService:
         self.storage.save(self.habits_data)
         return f"Habit - '{habit_schema.habit_name.title()}' added!"
 
-    def remove_habit(self, habit_id: int) -> str:
+    def delete_habit(self, habit_id: int) -> str:
         for i, habit in enumerate(self.habits_data):
             if habit["habit_id"] == habit_id:
                 del self.habits_data[i]
@@ -125,7 +125,7 @@ class HabitService:
                 return f"Habit - {habit['habit_name']} removed!"
         return "Habit not found!"
 
-    def remove_all_habits(self):
+    def delete_all_habits(self):
         return self.storage.clear()
 
     def complete_habit(self, habit_id: int) -> str:
@@ -175,11 +175,13 @@ class HabitService:
             result += "\n"
         return result.rstrip()
 
-    def show_achievement(self) -> str:
-        achievement = defaultdict(list)
+    def show_achievement(self, habit_id: int) -> str:
+        if not self.habits_data:
+            return f"Habits not found!"
+        result = "Achievement:\n"
         for habit in self.habits_data:
-            achievement["Achievement"].append(habit["achievement"])
-        for k, v in achievement.items():
-            return (f"{k}: "
-                    f"\n{v}")
+            if habit["habit_id"] == habit_id:
+                for value in habit["achievement"]:
+                    result += f'"{value}"\n'
+                return result
         return "Achievement not found!"

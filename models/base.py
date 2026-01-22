@@ -39,6 +39,7 @@ class DailyHabit(BaseHabit):
         self.habit_id = habit_id
         self.streak = streak
         self.current_goal_days = current_goal_days
+        self.achievement = []
 
     def to_dict(self) -> dict:
         return {
@@ -52,6 +53,7 @@ class DailyHabit(BaseHabit):
             "current_goal_days": self.current_goal_days,
             "created_at": self.created_at.isoformat(timespec="seconds"),
             "last_completed": self.last_completed,  # FIX ME
+            "achievement": self.achievement,
         }
 
 
