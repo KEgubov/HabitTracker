@@ -76,3 +76,18 @@ class WeeklyHabit(BaseHabit):
         self.habit_id = habit_id
         self.weekly_streak = weekly_streak
         self.deadline = self.created_at + timedelta(weeks=1)
+        self.achievement = []
+
+    def to_dict(self) -> dict:
+        return {
+            "habit_id": self.habit_id,
+            "habit_name": self.habit_name,
+            "habit_description": self.habit_description,
+            "category": self.category,
+            "type_habit": self.type_habit,
+            "completed": self.completed,
+            "weekly_streak": self.weekly_streak,
+            "created_at": self.created_at.isoformat(timespec="seconds"),
+            "last_completed": self.last_completed
+            "achievement": self.achievement,
+        }
