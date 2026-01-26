@@ -1,6 +1,11 @@
 from habit_service.service import HabitService
 from habit_storage.json_storage import HabitJsonStorage
-from schemas.habit_schema import CategoryHabit, DailyHabitSchema
+from schemas.habit_schema import (
+    CategoryHabit,
+    DailyHabitSchema,
+    WeeklyHabitSchema,
+    TypeHabit,
+)
 
 
 def menu():
@@ -13,6 +18,14 @@ def menu():
     print("6. Achievement")
     print("7. Exit")
     print("=" * 10, "MENU", "=" * 10)
+
+
+def create_habit_menu():
+    print("=" * 10, "CREATE HABIT", "=" * 10)
+    print("1. Daily Habit")
+    print("2. Weekly Habit")
+    print("3. Exit to main menu")
+    print("=" * 10, "CREATE HABIT", "=" * 10)
 
 
 def category_menu():
@@ -51,42 +64,99 @@ def show_habit_menu():
         choice = input("Enter your choice: ")
 
         if choice == "1":
-            habit_name = input("Enter your habit name: ").strip()
-            habit_description = input("Enter your habit description: ").strip()
-
             while True:
-                category_menu()
+                create_habit_menu()
 
-                category = input("Select a habit category: ")
-                if category == "1":
-                    category = CategoryHabit.HEALTH
-                elif category == "2":
-                    category = CategoryHabit.PRODUCTIVITY
-                elif category == "3":
-                    category = CategoryHabit.SPORTS
-                elif category == "4":
-                    category = CategoryHabit.SELF_DEVELOPMENT
-                elif category == "5":
-                    category = CategoryHabit.FINANCE
-                elif category == "6":
-                    category = CategoryHabit.OTHER
-                elif category == "7":
+                choice = input("Enter your choice: ")
+
+                if choice == "1":
+                    habit_name = input("Enter your habit name: ").strip()
+                    habit_description = input("Enter your habit description: ").strip()
+
+                    while True:
+                        category_menu()
+
+                        category = input("Select a habit category: ")
+                        if category == "1":
+                            category = CategoryHabit.HEALTH
+                        elif category == "2":
+                            category = CategoryHabit.PRODUCTIVITY
+                        elif category == "3":
+                            category = CategoryHabit.SPORTS
+                        elif category == "4":
+                            category = CategoryHabit.SELF_DEVELOPMENT
+                        elif category == "5":
+                            category = CategoryHabit.FINANCE
+                        elif category == "6":
+                            category = CategoryHabit.OTHER
+                        elif category == "7":
+                            print("Exiting to main menu...")
+                            break
+                        else:
+                            print("Invalid category selected")
+                            continue
+
+                        print(
+                            habit_service.create_habit(
+                                type_habit=TypeHabit.DAILY,
+                                daily_schema=DailyHabitSchema(
+                                    habit_name=habit_name,
+                                    habit_description=habit_description,
+                                    category=category,
+                                ),
+                            )
+                        )
+                        break
+                    break
+
+                elif choice == "2":
+                    habit_name = input("Enter your habit name: ").strip()
+                    habit_description = input("Enter your habit description: ").strip()
+
+                    while True:
+                        category_menu()
+
+                        category = input("Select a habit category: ")
+                        if category == "1":
+                            category = CategoryHabit.HEALTH
+                        elif category == "2":
+                            category = CategoryHabit.PRODUCTIVITY
+                        elif category == "3":
+                            category = CategoryHabit.SPORTS
+                        elif category == "4":
+                            category = CategoryHabit.SELF_DEVELOPMENT
+                        elif category == "5":
+                            category = CategoryHabit.FINANCE
+                        elif category == "6":
+                            category = CategoryHabit.OTHER
+                        elif category == "7":
+                            print("Exiting to main menu...")
+                            break
+                        else:
+                            print("Invalid category selected")
+                            continue
+
+                        print(
+                            habit_service.create_weekly_habit(
+                                type_habit=TypeHabit.WEEKLY,
+                                weekly_schema=WeeklyHabitSchema(
+                                    habit_name=habit_name,
+                                    habit_description=habit_description,
+                                    category=category,
+                                ),
+                            )
+                        )
+                        break
+                    break
+
+                elif choice == "3":
                     print("Exiting to main menu...")
                     break
+
                 else:
-                    print("Invalid category selected")
+                    print("Invalid choice")
                     continue
 
-                print(
-                    habit_service.create_habit(
-                        DailyHabitSchema(
-                            habit_name=habit_name,
-                            habit_description=habit_description,
-                            category=category,
-                        )
-                    )
-                )
-                break
         elif choice == "2":
             while True:
                 delete_habits_menu()
@@ -106,7 +176,7 @@ def show_habit_menu():
                         print("Exiting to main menu...")
                         break
                     else:
-                        print("Invalid choice") # ??????
+                        print("Invalid choice")  # ??????
                 elif choice == "3":
                     print("Exiting to main menu...")
                     break

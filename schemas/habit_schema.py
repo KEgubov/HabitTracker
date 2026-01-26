@@ -40,4 +40,3 @@ class DailyHabitSchema(BaseModel):
 
 class WeeklyHabitSchema(DailyHabitSchema):
     type_habit: TypeHabit = TypeHabit.WEEKLY
-    weekly_streak: Annotated[int, Field(ge=0)]
