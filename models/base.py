@@ -88,6 +88,7 @@ class WeeklyHabit(BaseHabit):
             "completed": self.completed,
             "weekly_streak": self.weekly_streak,
             "created_at": self.created_at.isoformat(timespec="seconds"),
-            "last_completed": self.last_completed
+            "last_completed": self.last_completed,
+            "deadline": self.deadline.isoformat(timespec="seconds"),
             "achievement": self.achievement,
         }
