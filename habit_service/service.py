@@ -1,10 +1,12 @@
 from datetime import datetime
 from habit_storage.json_storage import HabitJsonStorage
-from models.base import DailyHabit
+from models.base import DailyHabit, WeeklyHabit
 from schemas.habit_schema import (
     DailyHabitSchema,
+    WeeklyHabitSchema,
     GoalDaysHabit,
     AchievementHabit,
+    TypeHabit,
 )
 
 
@@ -20,6 +22,7 @@ class HabitService:
         Increases the streak by 1.
         Refreshes the target.
         """
+        self.habits_data = self.storage.load()
         for habit in self.habits_data:
             if habit["habit_id"] == habit_id and habit["completed"]:
                 if self._check_streak_validity():
@@ -46,6 +49,7 @@ class HabitService:
         """
         Series Verification
         """
+        self.habits_data = self.storage.load()
         for habit in self.habits_data:
             if not habit["last_completed"]:
                 return True
@@ -96,6 +100,7 @@ class HabitService:
         return None
 
     def generate_id(self) -> int:
+        self.habits_data = self.storage.load()
         if self.habits_data:
             try:
                 max_id = max(habit.get("habit_id", 0) for habit in self.habits_data)
@@ -106,18 +111,42 @@ class HabitService:
             next_id = 1
         return next_id
 
-    def create_habit(self, habit_schema: DailyHabitSchema) -> str:
-        habit = DailyHabit(
-            habit_id=self.generate_id(),
-            habit_name=habit_schema.habit_name,
-            habit_description=habit_schema.habit_description,
-            category=habit_schema.category,
-        )
-        self.habits_data.append(habit.to_dict())
-        self.storage.save(self.habits_data)
-        return f"Habit - '{habit_schema.habit_name.title()}' added!"
+    def create_habit(
+        self,
+        type_habit: TypeHabit,
+        daily_schema: DailyHabitSchema,
+    ) -> str:
+        self.habits_data = self.storage.load()
+        if type_habit == TypeHabit.DAILY:
+            habit = DailyHabit(
+                habit_id=self.generate_id(),
+                habit_name=daily_schema.habit_name,
+                habit_description=daily_schema.habit_description,
+                category=daily_schema.category,
+            )
+            self.habits_data.append(habit.to_dict())
+            self.storage.save(self.habits_data)
+        return f"Habit - '{daily_schema.habit_name.title()}' added!"
+
+    def create_weekly_habit(
+        self,
+        type_habit: TypeHabit,
+        weekly_schema: WeeklyHabitSchema,
+    ) -> str:
+        self.habits_data = self.storage.load()
+        if type_habit == TypeHabit.WEEKLY:
+            habit = WeeklyHabit(
+                habit_id=self.generate_id(),
+                habit_name=weekly_schema.habit_name,
+                habit_description=weekly_schema.habit_description,
+                category=weekly_schema.category,
+            )
+            self.habits_data.append(habit.to_dict())
+            self.storage.save(self.habits_data)
+        return f"Weekly habit - '{weekly_schema.habit_name.title()}' added!"
 
     def delete_habit(self, habit_id: int) -> str:
+        self.habits_data = self.storage.load()
         for i, habit in enumerate(self.habits_data):
             if habit["habit_id"] == habit_id:
                 del self.habits_data[i]
@@ -129,6 +158,7 @@ class HabitService:
         return self.storage.clear()
 
     def complete_habit(self, habit_id: int) -> str:
+        self.habits_data = self.storage.load()
         for habit in self.habits_data:
             if habit["habit_id"] == habit_id:
                 habit["completed"] = True
@@ -142,6 +172,7 @@ class HabitService:
         return "Habit not found!"
 
     def show_habit(self, habit_id: int) -> str:
+        self.habits_data = self.storage.load()
         if not self.habits_data:
             return f"Habits not found!"
         result = "Habit:\n"
@@ -156,6 +187,7 @@ class HabitService:
         return result
 
     def show_all_habits(self):
+        self.habits_data = self.storage.load()
         category = {}
         for habit in self.habits_data:
             cat = habit["category"]
@@ -176,6 +208,7 @@ class HabitService:
         return result.rstrip()
 
     def show_achievement(self, habit_id: int) -> str:
+        self.habits_data = self.storage.load()
         if not self.habits_data:
             return f"Habits not found!"
         result = "Achievement:\n"
