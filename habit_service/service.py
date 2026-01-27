@@ -180,9 +180,10 @@ class HabitService:
             if habit["habit_id"] == habit_id:
                 result += (
                     f"\nID: {habit['habit_id']} | "
-                    f"Name: {habit['habit_name']} | "
-                    f"Category: {habit['category']} | "
-                    f"Streak: {habit['streak']} days"
+                    f"Name: {habit['habit_name'].title()} | "
+                    f"Category: {habit['category'].title()} | "
+                    f"Streak: {habit['streak']} days | " 
+                    f"Type: {habit['type_habit'].title()} | "
                 )
         return result
 
@@ -200,9 +201,10 @@ class HabitService:
             result += f"Category: {cat.title()}\n"
             for habit in habits:
                 result += (
-                    f"  ID: {habit['habit_id']} | "
-                    f"Name: {habit['habit_name']} | "
-                    f"Streak: {habit['streak']} days\n"
+                    f"ID: {habit['habit_id']} | "
+                    f"Name: {habit['habit_name'].title()} | "
+                    f"Streak: {habit['streak']} days |"
+                    f" Type: {habit['type_habit'].title()} |\n"
                 )
             result += "\n"
         return result.rstrip()
