@@ -177,14 +177,24 @@ class HabitService:
             return f"Habits not found!"
         result = "Habit:\n"
         for habit in self.habits_data:
-            if habit["habit_id"] == habit_id:
-                result += (
-                    f"\nID: {habit['habit_id']} | "
-                    f"Name: {habit['habit_name'].title()} | "
-                    f"Category: {habit['category'].title()} | "
-                    f"Streak: {habit['streak']} days | " 
-                    f"Type: {habit['type_habit'].title()} | "
-                )
+            if habit["type_habit"] == "daily":
+                if habit["habit_id"] == habit_id:
+                    result += (
+                        f"\nID: {habit['habit_id']} | "
+                        f"Name: {habit['habit_name'].title()} | "
+                        f"Category: {habit['category'].title()} | "
+                        f"Streak: {habit['streak']} days | " 
+                        f"Type: {habit['type_habit'].title()} | "
+                    )
+            if habit["type_habit"] == "weekly":
+                if habit["habit_id"] == habit_id:
+                    result += (
+                        f"\nID: {habit['habit_id']} | "
+                        f"Name: {habit['habit_name'].title()} | "
+                        f"Category: {habit['category'].title()} | "
+                        f"Streak: {habit['weekly_streak']} weeks | "
+                        f"Type: {habit['type_habit'].title()} | "
+                    )
         return result
 
     def show_all_habits(self):
@@ -200,12 +210,20 @@ class HabitService:
         for cat, habits in category.items():
             result += f"Category: {cat.title()}\n"
             for habit in habits:
-                result += (
-                    f"ID: {habit['habit_id']} | "
-                    f"Name: {habit['habit_name'].title()} | "
-                    f"Streak: {habit['streak']} days |"
-                    f" Type: {habit['type_habit'].title()} |\n"
-                )
+                if habit["type_habit"] == "daily":
+                    result += (
+                        f"ID: {habit['habit_id']} | "
+                        f"Name: {habit['habit_name'].title()} | "
+                        f"Streak: {habit['streak']} days |"
+                        f" Type: {habit['type_habit'].title()} |\n"
+                    )
+                if habit["type_habit"] == "weekly":
+                    result += (
+                        f"ID: {habit['habit_id']} | "
+                        f"Name: {habit['habit_name'].title()} | "
+                        f"Streak: {habit['weekly_streak']} weeks |"
+                        f" Type: {habit['type_habit'].title()} |\n"
+                    )
             result += "\n"
         return result.rstrip()
 

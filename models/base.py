@@ -64,7 +64,7 @@ class WeeklyHabit(BaseHabit):
         habit_name: str,
         habit_description: str,
         category: CategoryHabit,
-        streak: int = 0,
+        weekly_streak: int = 0,
     ) -> None:
         super().__init__(
             habit_name,
@@ -73,7 +73,7 @@ class WeeklyHabit(BaseHabit):
             type_habit=TypeHabit.WEEKLY,
         )
         self.habit_id = habit_id
-        self.streak = streak
+        self.weekly_streak = weekly_streak
         self.deadline = self.created_at + timedelta(weeks=1)
         self.achievement = []
 
@@ -85,7 +85,7 @@ class WeeklyHabit(BaseHabit):
             "category": self.category,
             "type_habit": self.type_habit,
             "completed": self.completed,
-            "streak": self.streak,
+            "weekly_streak": self.weekly_streak,
             "created_at": self.created_at.isoformat(timespec="seconds"),
             "last_completed": self.last_completed,
             "deadline": self.deadline.isoformat(timespec="seconds"),
