@@ -5,24 +5,13 @@
         "habit_description": "test",
         "category": "health",
         "type_habit": "daily",
-        "completed": false,
-        "streak": 0,
-        "current_goal_days": 1,
-        "created_at": "2026-01-29T19:14:24",
-        "last_completed": null,
-        "achievement": []
-    },
-    {
-        "habit_id": 2,
-        "habit_name": "test",
-        "habit_description": "test",
-        "category": "productivity",
-        "type_habit": "weekly",
-        "completed": false,
-        "weekly_streak": 0,
-        "created_at": "2026-01-29T19:14:35",
-        "last_completed": null,
-        "deadline": "2026-02-05T19:14:35",
-        "achievement": []
+        "completed": true,
+        "streak": 1,
+        "current_goal_days": 7,
+        "created_at": "2026-01-31",
+        "last_completed": "2026-01-31",
+        "achievement": [
+            "I started – and this is a victory!"
+        ]
     }
 ]

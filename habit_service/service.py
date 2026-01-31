@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Dict
 from habit_storage.json_storage import HabitJsonStorage
 from models.base import DailyHabit, WeeklyHabit
@@ -9,7 +9,6 @@ from schemas.habit_schema import (
     AchievementHabit,
     TypeHabit,
 )
-# Переписать логику увелечения стрика
 
 class HabitService:
     def __init__(self, storage: HabitJsonStorage) -> None:
@@ -22,61 +21,39 @@ class HabitService:
     def _save(self):
         self.storage.save(self.habits_data)
 
-    def generate_id(self) -> int:
+    def _generate_id(self) -> int:
         self.habits_data = self.storage.load()
-        if not self.habits_data:
-            return 1
         return max(h.get("habit_id", 0) for h in self.habits_data) + 1
 
-    def _increase_streak(self, habit_id: int) -> str:
-        """
-        Method:
-        Checks the validity of the series.
-        Increases the streak by 1.
-        Refreshes the target.
-        """
-        self.habits_data = self.storage.load()
+    def _streak_increase(self, habit_id: int) -> str:
+        today = datetime.now().date()
+        today_iso = today.isoformat()
         for habit in self.habits_data:
-            if habit["habit_id"] == habit_id and habit["completed"]:
-                if self._check_streak_validity():
-                    habit["streak"] += 1
-
-                    messages = []
-                    message_achievement = self._update_achievements(habit)
-                    if message_achievement:
-                        messages.append(message_achievement)
-
-                    message_goal_days = self._update_goal_days(habit)
-                    if message_goal_days:
-                        messages.append(message_goal_days)
-
-                    habit["last_completed"] = datetime.now().isoformat(
-                        timespec="seconds"
-                    )
-                    habit["completed"] = False
-                    if messages:
-                        return "\n".join(messages)
-        return ""
-
-    def _check_streak_validity(self) -> bool:
-        """
-        Series Verification
-        """
-        self.habits_data = self.storage.load()
-        for habit in self.habits_data:
-            if not habit["last_completed"]:
-                return True
-
-            if isinstance(habit["last_completed"], str):
-                last_completed_dt = datetime.fromisoformat(habit["last_completed"])
+            if habit["habit_id"] != habit_id:
+                continue
+            last_iso = habit.get("last_completed")
+            if last_iso == today_iso:
+                return "The habit has already been completed!"
+            if last_iso is None:
+                habit["streak"] = 1
             else:
-                last_completed_dt = habit["last_completed"]
+                try:
+                    last_date = datetime.fromisoformat(last_iso).date()
+                    delta = (today - last_date).days
+                    if delta == 1:
+                        habit["streak"] += 1
+                    elif delta > 1:
+                        habit["streak"] = 1
+                    else:
+                        pass
+                except (ValueError, TypeError):
+                    habit["streak"] = 1
+            habit["last_completed"] = today_iso
+            self._update_goal_days(habit)
+            self._update_achievements(habit)
+            return f"Habit completed! Current streak: {habit['streak']} days."
 
-            days_since_last = (datetime.now() - last_completed_dt).days
-            if days_since_last > 1:
-                habit["streak"] = 0
-                return False
-        return True
+        return "Habit not found!"
 
     def _update_goal_days(self, habit: dict) -> str:
         goal_map = {
@@ -120,7 +97,7 @@ class HabitService:
         self._reload()
         if type_habit == TypeHabit.DAILY:
             habit = DailyHabit(
-                habit_id=self.generate_id(),
+                habit_id=self._generate_id(),
                 habit_name=daily_schema.habit_name,
                 habit_description=daily_schema.habit_description,
                 category=daily_schema.category,
@@ -137,7 +114,7 @@ class HabitService:
         self._reload()
         if type_habit == TypeHabit.WEEKLY:
             habit = WeeklyHabit(
-                habit_id=self.generate_id(),
+                habit_id=self._generate_id(),
                 habit_name=weekly_schema.habit_name,
                 habit_description=weekly_schema.habit_description,
                 category=weekly_schema.category,
@@ -159,17 +136,13 @@ class HabitService:
         return self.storage.clear()
 
     def complete_habit(self, habit_id: int) -> str:
-        self.habits_data = self.storage.load()
+        self._reload()
         for habit in self.habits_data:
             if habit["habit_id"] == habit_id:
                 habit["completed"] = True
-                message = self._increase_streak(habit_id)
+                message = self._streak_increase(habit_id)
                 self.storage.save(self.habits_data)
-                if message:
-                    return f"Habit - '{habit['habit_name']}' Completed!\n{message}"
-                else:
-                    return f"Habit - '{habit['habit_name']}' Completed!"
-
+                return message
         return "Habit not found!"
 
     def show_habit(self, habit_id: int) -> str:
@@ -184,7 +157,7 @@ class HabitService:
                         f"\nID: {habit['habit_id']} | "
                         f"Name: {habit['habit_name'].title()} | "
                         f"Category: {habit['category'].title()} | "
-                        f"Streak: {habit['streak']} days | " 
+                        f"Streak: {habit['streak']} days | "
                         f"Type: {habit['type_habit'].title()} | "
                     )
             if habit["type_habit"] == "weekly":
@@ -228,7 +201,7 @@ class HabitService:
             result += "\n"
         return result.rstrip()
 
-    def show_achievement(self, habit_id: int) -> str:
+    def show_achievement(self, habit_id: int) -> str | None:
         self._reload()
         if not self.habits_data:
             return f"Habits not found!"
