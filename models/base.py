@@ -16,7 +16,7 @@ class BaseHabit:
         self.category = category
         self.type_habit = type_habit
         self.completed = completed
-        self.created_at = datetime.now()
+        self.created_at = datetime.now().date()
         self.last_completed = None  # FIX ME
 
 
@@ -51,7 +51,7 @@ class DailyHabit(BaseHabit):
             "completed": self.completed,
             "streak": self.streak,
             "current_goal_days": self.current_goal_days,
-            "created_at": self.created_at.isoformat(timespec="seconds"),
+            "created_at": self.created_at.isoformat(),
             "last_completed": self.last_completed,  # FIX ME
             "achievement": self.achievement,
         }
@@ -86,8 +86,8 @@ class WeeklyHabit(BaseHabit):
             "type_habit": self.type_habit,
             "completed": self.completed,
             "weekly_streak": self.weekly_streak,
-            "created_at": self.created_at.isoformat(timespec="seconds"),
+            "created_at": self.created_at.isoformat(),
             "last_completed": self.last_completed,
-            "deadline": self.deadline.isoformat(timespec="seconds"),
+            "deadline": self.deadline.isoformat(),
             "achievement": self.achievement,
         }
