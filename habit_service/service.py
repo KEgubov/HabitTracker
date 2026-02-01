@@ -85,7 +85,9 @@ class HabitService:
         }
         for days, achievement in achievement_map.items():
             if habit["streak"] == days:
-                habit["achievement"].append(achievement)
+                if achievement in habit["achievement"]:
+                    return None
+                habit["achievement"].append(achievement.value)
                 return f"You have received a new achievement - {achievement.value}!"
         return None
 
