@@ -23,6 +23,8 @@ class HabitService:
 
     def _generate_id(self) -> int:
         self.habits_data = self.storage.load()
+        if not self.habits_data:
+            return 1
         return max(h.get("habit_id", 0) for h in self.habits_data) + 1
 
     def _streak_increase(self, habit_id: int) -> str:
