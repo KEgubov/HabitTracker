@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
-from schemas.habit_schema import GoalDaysHabit, TypeHabit, CategoryHabit
+from schemas.habit_schema import GoalDaysHabit, TypeHabit, CategoryHabit, \
+    GoalWeeklyHabit
 
 
 class BaseHabit:
@@ -44,6 +45,7 @@ class DailyHabit(BaseHabit):
     def to_dict(self) -> dict:
         return {
             "habit_id": self.habit_id,
+            "created_at": self.created_at.isoformat(),
             "habit_name": self.habit_name,
             "habit_description": self.habit_description,
             "category": self.category,
@@ -51,7 +53,6 @@ class DailyHabit(BaseHabit):
             "completed": self.completed,
             "streak": self.streak,
             "current_goal_days": self.current_goal_days,
-            "created_at": self.created_at.isoformat(),
             "last_completed": self.last_completed,  # FIX ME
             "achievement": self.achievement,
         }
@@ -65,6 +66,7 @@ class WeeklyHabit(BaseHabit):
         habit_description: str,
         category: CategoryHabit,
         weekly_streak: int = 0,
+        current_goal_days: GoalWeeklyHabit = GoalWeeklyHabit.ONE_WEEK,
     ) -> None:
         super().__init__(
             habit_name,
@@ -75,18 +77,20 @@ class WeeklyHabit(BaseHabit):
         self.habit_id = habit_id
         self.weekly_streak = weekly_streak
         self.deadline = self.created_at + timedelta(weeks=1)
+        self.current_goal_days = current_goal_days
         self.achievement = []
 
     def to_dict(self) -> dict:
         return {
             "habit_id": self.habit_id,
+            "created_at": self.created_at.isoformat(),
             "habit_name": self.habit_name,
             "habit_description": self.habit_description,
             "category": self.category,
             "type_habit": self.type_habit,
             "completed": self.completed,
             "weekly_streak": self.weekly_streak,
-            "created_at": self.created_at.isoformat(),
+            "current_goal_days": self.current_goal_days,
             "last_completed": self.last_completed,
             "deadline": self.deadline.isoformat(),
             "achievement": self.achievement,
