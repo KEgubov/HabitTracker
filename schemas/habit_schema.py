@@ -23,6 +23,13 @@ class GoalDaysHabit(int, Enum):
     SIX_MONTHS = 180
     ONE_YEAR = 365
 
+class GoalWeeklyHabit(int, Enum):
+    ONE_WEEK = 1
+    ONE_MONTH = 4
+    TWO_MONTHS = 8
+    SIX_MONTHS = 24
+    ONE_YEAR = 52
+
 class AchievementHabit(str, Enum):
     ONE_DAY = "I started – and this is a victory!"
     ONE_WEEK = "Willpower Week"
