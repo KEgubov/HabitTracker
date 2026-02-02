@@ -73,7 +73,24 @@ class HabitService:
                     f"Congratulations! You've reached your goal! "
                     f"New target - {goal.value} days!"
                 )
-        return f"Current streak - {habit['streak']} days"
+        return None
+
+    def _update_weekly_goal_days(self, habit: dict) -> str | None:
+        goal_map = {
+            1: GoalWeeklyHabit.ONE_WEEK,
+            4: GoalWeeklyHabit.ONE_MONTH,
+            8: GoalWeeklyHabit.TWO_MONTHS,
+            45: GoalWeeklyHabit.SIX_MONTHS,
+            91: GoalWeeklyHabit.ONE_YEAR,
+        }
+        for weeks, goal in goal_map.items():
+            if habit["weekly_streak"] == weeks:
+                habit["current_goal_days"] = goal
+                return (
+                    f"Congratulations! You've reached your goal! "
+                    f"New target - {goal.value} weeks!"
+                )
+        return None
 
     def _update_achievements(self, habit: dict) -> str | None:
         achievement_map = {
