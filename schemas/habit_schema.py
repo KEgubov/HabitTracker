@@ -32,6 +32,13 @@ class AchievementHabit(str, Enum):
     SIX_MONTHS = "180 Days of Power"
     ONE_YEAR = "365 days – I did it!"
 
+class AchievementWeeklyHabit(str, Enum):
+    ONE_WEEK = "A week in action, you're in the game!"
+    ONE_MONTH = "A month without breakdowns - you are no longer what you were"
+    TWO_MONTHS = "Two months without failures is discipline!"
+    SIX_MONTHS = "Six months - you are not a hero on a schedule, you are a hero on life"
+    ONE_YEAR = "A Year Without Stops – You've Created a Legend from Your Discipline"
+
 class DailyHabitSchema(BaseModel):
     habit_name: Annotated[str, Field(min_length=1, max_length=500)]
     habit_description: Annotated[str, Field(min_length=1, max_length=500)]
