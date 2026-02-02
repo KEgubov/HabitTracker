@@ -93,6 +93,24 @@ class HabitService:
                 return f"You have received a new achievement - {achievement.value}!"
         return None
 
+    def _update_weekly_achievements(self, habit: dict) -> str | None:
+        achievement_map = {
+            1: AchievementWeeklyHabit.ONE_WEEK,
+            4: AchievementWeeklyHabit.ONE_MONTH,
+            8: AchievementWeeklyHabit.TWO_MONTHS,
+            45: AchievementWeeklyHabit.SIX_MONTHS,
+            91: AchievementWeeklyHabit.ONE_YEAR,
+        }
+        for days, achievement in achievement_map.items():
+            if habit["weekly_streak"] == days:
+                if achievement in habit["achievement"]:
+                    return None
+                habit["achievement"].append(achievement.value)
+                return (
+                    f"You have received a new weekly achievement - {achievement.value}!"
+                )
+        return None
+
     def create_habit(
         self,
         type_habit: TypeHabit,
