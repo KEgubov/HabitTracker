@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import List, Dict
 from habit_storage.json_storage import HabitJsonStorage
 from models.base import DailyHabit, WeeklyHabit
@@ -8,7 +8,10 @@ from schemas.habit_schema import (
     GoalDaysHabit,
     AchievementHabit,
     TypeHabit,
+    AchievementWeeklyHabit,
+    GoalWeeklyHabit,
 )
+# Сделать обновление стрика для еженедельных привычек
 
 class HabitService:
     def __init__(self, storage: HabitJsonStorage) -> None:
@@ -27,7 +30,7 @@ class HabitService:
             return 1
         return max(h.get("habit_id", 0) for h in self.habits_data) + 1
 
-    def _streak_increase(self, habit_id: int) -> str:
+    def _streak_increase(self, habit_id: int) -> str | None:
         today = datetime.now().date()
         today_iso = today.isoformat()
         for habit in self.habits_data:
@@ -50,14 +53,23 @@ class HabitService:
                         pass
                 except (ValueError, TypeError):
                     habit["streak"] = 1
-            habit["last_completed"] = today_iso
-            self._update_goal_days(habit)
-            self._update_achievements(habit)
-            return f"Habit completed! Current streak: {habit['streak']} days."
+            messages = []
 
-        return "Habit not found!"
+            update_goal_message = self._update_goal_days(habit)
+            if update_goal_message:
+                messages.append(update_goal_message)
 
-    def _update_goal_days(self, habit: dict) -> str:
+            update_achievement_message = self._update_achievements(habit)
+            if update_achievement_message:
+                messages.append(update_achievement_message)
+
+            if messages:
+                return "\n".join(messages)
+            else:
+                return f"Habit completed! Current streak - {habit['streak']} days"
+        return None
+
+    def _update_goal_days(self, habit: dict) -> str | None:
         goal_map = {
             1: GoalDaysHabit.ONE_WEEK,
             7: GoalDaysHabit.THREE_WEEKS,
