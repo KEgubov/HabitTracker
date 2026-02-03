@@ -89,11 +89,10 @@ class HabitService:
 
     def _update_weekly_goal_days(self, habit: dict) -> str | None:
         goal_map = {
-            1: GoalWeeklyHabit.ONE_WEEK,
-            4: GoalWeeklyHabit.ONE_MONTH,
-            8: GoalWeeklyHabit.TWO_MONTHS,
-            45: GoalWeeklyHabit.SIX_MONTHS,
-            91: GoalWeeklyHabit.ONE_YEAR,
+            1: GoalWeeklyHabit.ONE_MONTH,
+            4: GoalWeeklyHabit.TWO_MONTHS,
+            8: GoalWeeklyHabit.SIX_MONTHS,
+            45: GoalWeeklyHabit.ONE_YEAR,
         }
         for weeks, goal in goal_map.items():
             if habit["weekly_streak"] == weeks:
