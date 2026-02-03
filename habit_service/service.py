@@ -188,11 +188,18 @@ class HabitService:
     def complete_habit(self, habit_id: int) -> str:
         self._reload()
         for habit in self.habits_data:
-            if habit["habit_id"] == habit_id:
-                habit["completed"] = True
-                message = self._streak_increase(habit_id)
-                self.storage.save(self.habits_data)
-                return message
+            if habit["type_habit"] == "daily":
+                if habit["habit_id"] == habit_id:
+                    habit["completed"] = True
+                    message = self._streak_increase(habit_id)
+                    self.storage.save(self.habits_data)
+                    return message
+            if habit["type_habit"] == "weekly":
+                if habit["habit_id"] == habit_id:
+                    habit["completed"] = True
+                    message = self._weekly_streak_increase(habit_id)
+                    self.storage.save(self.habits_data)
+                    return message
         return "Habit not found!"
 
     def show_habit(self, habit_id: int) -> str:
