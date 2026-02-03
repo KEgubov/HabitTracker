@@ -69,6 +69,61 @@ class HabitService:
                 return f"Habit completed! Current streak - {habit['streak']} days"
         return None
 
+    def _check_weekly_deadline(self, habit: dict, today: date) -> tuple[int, str]:
+        """Проверяет дедлайн еженедельной привычки и возвращает новый стрик и сообщение"""
+        deadline_iso = habit.get("deadline")
+
+        if not deadline_iso:
+            return 1, "Weekly streak started!"
+
+        try:
+            deadline_date = datetime.fromisoformat(deadline_iso).date()
+
+            if today > deadline_date:
+                return 1, "Weekly streak reset - missed the deadline!"
+            else:
+                return (
+                    habit.get("weekly_streak", 0) + 1,
+                    f"Weekly streak increased to {habit.get('weekly_streak', 0) + 1}!",
+                )
+
+        except (ValueError, TypeError):
+            return 1, "Data parsing error. Weekly streak reset to 1."
+
+    def _weekly_streak_increase(self, habit_id: int) -> str | None:
+        today = datetime.now().date()
+        today_iso = today.isoformat()
+
+        for habit in self.habits_data:
+            if habit["habit_id"] != habit_id:
+                continue
+
+            if habit.get("last_completed") == today_iso:
+                return "The habit has already been completed today!"
+
+            new_streak, streak_message = self._check_weekly_deadline(habit, today)
+            habit["weekly_streak"] = new_streak
+
+            new_deadline = today + timedelta(weeks=1)
+            habit["deadline"] = new_deadline.isoformat()
+
+            habit["last_completed"] = today_iso
+
+            messages = [
+                streak_message,
+                f"New deadline: {new_deadline.strftime('%Y-%m-%d')}",
+            ]
+
+            if goal_msg := self._update_weekly_goal_days(habit):
+                messages.append(goal_msg)
+
+            if achievement_msg := self._update_weekly_achievements(habit):
+                messages.append(achievement_msg)
+
+            return "\n".join(messages)
+
+        return None
+
     def _update_goal_days(self, habit: dict) -> str | None:
         goal_map = {
             1: GoalDaysHabit.ONE_WEEK,
