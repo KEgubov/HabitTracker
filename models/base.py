@@ -18,7 +18,7 @@ class BaseHabit:
         self.type_habit = type_habit
         self.completed = completed
         self.created_at = datetime.now().date()
-        self.last_completed = None  # FIX ME
+        self.last_completed = None
 
 
 class DailyHabit(BaseHabit):
@@ -53,7 +53,7 @@ class DailyHabit(BaseHabit):
             "completed": self.completed,
             "streak": self.streak,
             "current_goal_days": self.current_goal_days,
-            "last_completed": self.last_completed,  # FIX ME
+            "last_completed": self.last_completed,
             "achievement": self.achievement,
         }
 
@@ -66,7 +66,7 @@ class WeeklyHabit(BaseHabit):
         habit_description: str,
         category: CategoryHabit,
         weekly_streak: int = 0,
-        current_goal_days: GoalWeeklyHabit = GoalWeeklyHabit.ONE_WEEK,
+        current_goal_weeks: GoalWeeklyHabit = GoalWeeklyHabit.ONE_WEEK,
     ) -> None:
         super().__init__(
             habit_name,
@@ -77,7 +77,7 @@ class WeeklyHabit(BaseHabit):
         self.habit_id = habit_id
         self.weekly_streak = weekly_streak
         self.deadline = self.created_at + timedelta(weeks=1)
-        self.current_goal_days = current_goal_days
+        self.current_goal_weeks = current_goal_weeks
         self.achievement = []
 
     def to_dict(self) -> dict:
@@ -90,7 +90,7 @@ class WeeklyHabit(BaseHabit):
             "type_habit": self.type_habit,
             "completed": self.completed,
             "weekly_streak": self.weekly_streak,
-            "current_goal_days": self.current_goal_days,
+            "current_goal_weeks": self.current_goal_weeks,
             "last_completed": self.last_completed,
             "deadline": self.deadline.isoformat(),
             "achievement": self.achievement,
