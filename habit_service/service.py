@@ -324,3 +324,16 @@ class HabitService:
                     result += f'"{value}"\n'
                 return result
         return "Achievement not found!"
+
+    def show_all_achievements(self):
+        self._reload()
+        if not self.habits_data:
+            return f"Habits not found!"
+        result = "All achievements:\n"
+        achievement = []
+        for habit in self.habits_data:
+            if habit.get("achievement"):
+                achievement.extend(habit.get("achievement"))
+        for element in achievement:
+            result += f'\n"{element}"'
+        return result
