@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta, date
 from typing import List, Dict
 from habit_storage.json_storage import HabitJsonStorage
 from models.base import DailyHabit, WeeklyHabit
@@ -11,26 +11,54 @@ from schemas.habit_schema import (
     AchievementWeeklyHabit,
     GoalWeeklyHabit,
 )
-# Сделать обновление стрика для еженедельных привычек
+
 
 class HabitService:
+    """Service class for managing habits: creation, deletion, completion, and display."""
+
     def __init__(self, storage: HabitJsonStorage) -> None:
+        """
+        Initialize the HabitService with a storage backend.
+
+        Args:
+            storage (HabitJsonStorage): Storage instance used to persist habits.
+        """
         self.storage = storage
         self.habits_data: List[Dict] = self.storage.load()
 
-    def _reload(self):
+    def _reload(self) -> None:
+        """Reload habits data from storage."""
         self.habits_data = self.storage.load()
 
-    def _save(self):
+    def _save(self) -> None:
+        """Save current habits data to storage."""
         self.storage.save(self.habits_data)
 
     def _generate_id(self) -> int:
+        """
+        Generate a new unique habit ID.
+
+        Returns:
+            int: The next available habit ID (starts from 1 if empty).
+        """
         self.habits_data = self.storage.load()
         if not self.habits_data:
             return 1
         return max(h.get("habit_id", 0) for h in self.habits_data) + 1
 
     def _streak_increase(self, habit_id: int) -> str | None:
+        """
+        Increase the streak for a daily habit if completed today.
+
+        Handles streak logic, goal updates, and achievement unlocking.
+
+        Args:
+            habit_id (int): ID of the habit to update.
+
+        Returns:
+            str | None: Success message with streak/goal/achievement info,
+                        or error message, or None if habit not found.
+        """
         today = datetime.now().date()
         today_iso = today.isoformat()
         for habit in self.habits_data:
@@ -70,7 +98,16 @@ class HabitService:
         return None
 
     def _check_weekly_deadline(self, habit: dict, today: date) -> tuple[int, str]:
-        """Проверяет дедлайн еженедельной привычки и возвращает новый стрик и сообщение"""
+        """
+        Check if the weekly deadline has passed and determine new streak value.
+
+        Args:
+            habit (dict): Habit data dictionary.
+            today (date): Current date.
+
+        Returns:
+            tuple[int, str]: (new_streak_value, message)
+        """
         deadline_iso = habit.get("deadline")
 
         if not deadline_iso:
@@ -91,6 +128,18 @@ class HabitService:
             return 1, "Data parsing error. Weekly streak reset to 1."
 
     def _weekly_streak_increase(self, habit_id: int) -> str | None:
+        """
+        Increase the weekly streak and update deadline for a weekly habit.
+
+        Also handles goal and achievement updates.
+
+        Args:
+            habit_id (int): ID of the weekly habit.
+
+        Returns:
+            str | None: Message about streak update, new deadline, goals/achievements,
+                        or error message, or None if not found.
+        """
         today = datetime.now().date()
         today_iso = today.isoformat()
 
@@ -125,6 +174,15 @@ class HabitService:
         return None
 
     def _update_goal_days(self, habit: dict) -> str | None:
+        """
+        Check if current daily streak matches any goal milestone and update it.
+
+        Args:
+            habit (dict): Habit data dictionary.
+
+        Returns:
+            str | None: Congratulation message if a new goal was reached, else None.
+        """
         goal_map = {
             1: GoalDaysHabit.ONE_WEEK,
             7: GoalDaysHabit.THREE_WEEKS,
@@ -143,6 +201,15 @@ class HabitService:
         return None
 
     def _update_weekly_goal_days(self, habit: dict) -> str | None:
+        """
+        Check if current weekly streak matches any weekly goal milestone.
+
+        Args:
+            habit (dict): Habit data dictionary.
+
+        Returns:
+            str | None: Congratulation message if a new goal was reached, else None.
+        """
         goal_map = {
             1: GoalWeeklyHabit.ONE_MONTH,
             4: GoalWeeklyHabit.TWO_MONTHS,
@@ -151,7 +218,7 @@ class HabitService:
         }
         for weeks, goal in goal_map.items():
             if habit["weekly_streak"] == weeks:
-                habit["current_goal_days"] = goal
+                habit["current_goal_weeks"] = goal
                 return (
                     f"Congratulations! You've reached your goal! "
                     f"New target - {goal.value} weeks!"
@@ -159,6 +226,15 @@ class HabitService:
         return None
 
     def _update_achievements(self, habit: dict) -> str | None:
+        """
+        Check and award new daily achievements based on current streak.
+
+        Args:
+            habit (dict): Habit data dictionary.
+
+        Returns:
+            str | None: Message about new achievement, or None if none awarded.
+        """
         achievement_map = {
             1: AchievementHabit.ONE_DAY,
             7: AchievementHabit.ONE_WEEK,
@@ -177,6 +253,15 @@ class HabitService:
         return None
 
     def _update_weekly_achievements(self, habit: dict) -> str | None:
+        """
+        Check and award new weekly achievements based on current weekly streak.
+
+        Args:
+            habit (dict): Habit data dictionary.
+
+        Returns:
+            str | None: Message about new weekly achievement, or None if none.
+        """
         achievement_map = {
             1: AchievementWeeklyHabit.ONE_WEEK,
             4: AchievementWeeklyHabit.ONE_MONTH,
@@ -199,6 +284,16 @@ class HabitService:
         type_habit: TypeHabit,
         daily_schema: DailyHabitSchema,
     ) -> str:
+        """
+        Create a new daily habit.
+
+        Args:
+            type_habit (TypeHabit): Must be TypeHabit.DAILY
+            daily_schema (DailyHabitSchema): Validated habit input data
+
+        Returns:
+            str: Success message with habit name
+        """
         self._reload()
         if type_habit == TypeHabit.DAILY:
             habit = DailyHabit(
@@ -216,6 +311,16 @@ class HabitService:
         type_habit: TypeHabit,
         weekly_schema: WeeklyHabitSchema,
     ) -> str:
+        """
+        Create a new weekly habit.
+
+        Args:
+            type_habit (TypeHabit): Must be TypeHabit.WEEKLY
+            weekly_schema (WeeklyHabitSchema): Validated habit input data
+
+        Returns:
+            str: Success message with habit name
+        """
         self._reload()
         if type_habit == TypeHabit.WEEKLY:
             habit = WeeklyHabit(
@@ -229,6 +334,15 @@ class HabitService:
         return f"Weekly habit - '{weekly_schema.habit_name.title()}' added!"
 
     def delete_habit(self, habit_id: int) -> str:
+        """
+        Delete a habit by its ID.
+
+        Args:
+            habit_id (int): ID of the habit to delete
+
+        Returns:
+            str: Success message or "Habit not found!"
+        """
         self._reload()
         for i, habit in enumerate(self.habits_data):
             if habit["habit_id"] == habit_id:
@@ -238,9 +352,24 @@ class HabitService:
         return "Habit not found!"
 
     def delete_all_habits(self):
+        """
+        Delete all habits from storage.
+
+        Returns:
+            str: Confirmation message from storage
+        """
         return self.storage.clear()
 
     def complete_habit(self, habit_id: int) -> str:
+        """
+        Mark a habit as completed for today and update streak/goals/achievements.
+
+        Args:
+            habit_id (int): ID of the habit to complete
+
+        Returns:
+            str: Result message (streak info, achievements, errors, etc.)
+        """
         self._reload()
         for habit in self.habits_data:
             if habit["type_habit"] == "daily":
@@ -258,6 +387,15 @@ class HabitService:
         return "Habit not found!"
 
     def show_habit(self, habit_id: int) -> str:
+        """
+        Return formatted string with details of a single habit.
+
+        Args:
+            habit_id (int): ID of the habit to display
+
+        Returns:
+            str: Formatted habit info or "Habit not found!"
+        """
         self._reload()
         if not self.habits_data:
             return f"Habits not found!"
@@ -283,7 +421,13 @@ class HabitService:
                     )
         return result
 
-    def show_all_habits(self):
+    def show_all_habits(self) -> str:
+        """
+        Return formatted string with all habits grouped by category.
+
+        Returns:
+            str: Multi-line string with categorized habits
+        """
         self._reload()
         category = {}
         for habit in self.habits_data:
@@ -314,6 +458,15 @@ class HabitService:
         return result.rstrip()
 
     def show_achievement(self, habit_id: int) -> str | None:
+        """
+        Return all achievements earned for a specific habit.
+
+        Args:
+            habit_id (int): ID of the habit
+
+        Returns:
+            str: List of achievements or error message
+        """
         self._reload()
         if not self.habits_data:
             return f"Habits not found!"
@@ -326,6 +479,12 @@ class HabitService:
         return "Achievement not found!"
 
     def show_all_achievements(self):
+        """
+        Return a list of all achievements earned across all habits.
+
+        Returns:
+            str: Formatted string with all unique achievements
+        """
         self._reload()
         if not self.habits_data:
             return f"Habits not found!"

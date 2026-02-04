@@ -1,6 +1,7 @@
 [
     {
         "habit_id": 1,
+        "created_at": "2026-02-03",
         "habit_name": "test",
         "habit_description": "test",
         "category": "health",
@@ -8,10 +9,25 @@
         "completed": true,
         "streak": 1,
         "current_goal_days": 7,
-        "created_at": "2026-01-31",
-        "last_completed": "2026-01-31",
+        "last_completed": null,
         "achievement": [
             "I started – and this is a victory!"
+        ]
+    },
+    {
+        "habit_id": 2,
+        "created_at": "2026-02-03",
+        "habit_name": "test",
+        "habit_description": "test",
+        "category": "self development",
+        "type_habit": "weekly",
+        "completed": true,
+        "weekly_streak": 1,
+        "current_goal_weeks": 4,
+        "last_completed": "2026-02-03",
+        "deadline": "2026-02-10",
+        "achievement": [
+            "A week in action, you're in the game!"
         ]
     }
 ]
