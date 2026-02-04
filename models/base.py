@@ -1,9 +1,15 @@
 from datetime import datetime, timedelta
-from schemas.habit_schema import GoalDaysHabit, TypeHabit, CategoryHabit, \
-    GoalWeeklyHabit
+from schemas.habit_schema import (
+    GoalDaysHabit,
+    TypeHabit,
+    CategoryHabit,
+    GoalWeeklyHabit,
+)
 
 
 class BaseHabit:
+    """Base class for all habit types."""
+
     def __init__(
         self,
         habit_name: str,
@@ -12,6 +18,16 @@ class BaseHabit:
         type_habit: TypeHabit,
         completed: bool = False,
     ) -> None:
+        """
+        Initialize common habit attributes.
+
+        Args:
+            habit_name (str): Name of the habit
+            habit_description (str): Description of the habit
+            category (CategoryHabit): Category enum value
+            type_habit (TypeHabit): Daily or Weekly
+            completed (bool): Whether the habit is marked completed today
+        """
         self.habit_name = habit_name
         self.habit_description = habit_description
         self.category = category
@@ -22,6 +38,8 @@ class BaseHabit:
 
 
 class DailyHabit(BaseHabit):
+    """Model representing a daily habit."""
+
     def __init__(
         self,
         habit_id: int,
@@ -43,6 +61,12 @@ class DailyHabit(BaseHabit):
         self.achievement = []
 
     def to_dict(self) -> dict:
+        """
+        Convert daily habit object to dictionary for serialization.
+
+        Returns:
+            dict: JSON-compatible dictionary
+        """
         return {
             "habit_id": self.habit_id,
             "created_at": self.created_at.isoformat(),
@@ -59,6 +83,8 @@ class DailyHabit(BaseHabit):
 
 
 class WeeklyHabit(BaseHabit):
+    """Model representing a weekly habit."""
+
     def __init__(
         self,
         habit_id: int,
@@ -81,6 +107,12 @@ class WeeklyHabit(BaseHabit):
         self.achievement = []
 
     def to_dict(self) -> dict:
+        """
+        Convert weekly habit object to dictionary for serialization.
+
+        Returns:
+            dict: JSON-compatible dictionary
+        """
         return {
             "habit_id": self.habit_id,
             "created_at": self.created_at.isoformat(),
