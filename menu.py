@@ -11,12 +11,13 @@ from schemas.habit_schema import (
 def menu():
     print("=" * 10, "MENU", "=" * 10)
     print("1. Create Habit")
-    print("2. Delete Habits Menu")
+    print("2. Delete Habits")
     print("3. Complete Habit")
     print("4. Show Habit")
     print("5. Show All Habits")
-    print("6. Achievement")
-    print("7. Exit")
+    print("6. Show Achievement")
+    print("7. Show all achievements")
+    print("8. Exit")
     print("=" * 10, "MENU", "=" * 10)
 
 
@@ -200,6 +201,9 @@ def show_habit_menu():
             print(habit_service.show_achievement(habit_id))
 
         elif choice == "7":
+            print(habit_service.show_all_achievements())
+
+        elif choice == "8":
             exit("Thank you for using this program!")
 
         else:
