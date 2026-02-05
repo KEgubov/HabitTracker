@@ -99,32 +99,36 @@ class HabitTrackerCLI:
             print("Invalid choice. Please select a number between 1 and 7.")
 
         category = category_map[choice]
-
-        if type_habit == TypeHabit.DAILY:
-            print(
-                self.habit_service.create_habit(
-                    type_habit=TypeHabit.DAILY,
-                    daily_schema=DailyHabitSchema(
-                        habit_name=habit_name,
-                        habit_description=habit_description,
-                        category=category,
-                    ),
+        try:
+            if type_habit == TypeHabit.DAILY:
+                print(
+                    self.habit_service.create_habit(
+                        type_habit=TypeHabit.DAILY,
+                        daily_schema=DailyHabitSchema(
+                            habit_name=habit_name,
+                            habit_description=habit_description,
+                            category=category,
+                        ),
+                    )
                 )
-            )
-            self.main_menu()
-            return
-        elif type_habit == TypeHabit.WEEKLY:
-            print(
-                self.habit_service.create_weekly_habit(
-                    type_habit=TypeHabit.WEEKLY,
-                    weekly_schema=WeeklyHabitSchema(
-                        habit_name=habit_name,
-                        habit_description=habit_description,
-                        category=category,
-                    ),
+                self.main_menu()
+                return
+            elif type_habit == TypeHabit.WEEKLY:
+                print(
+                    self.habit_service.create_weekly_habit(
+                        type_habit=TypeHabit.WEEKLY,
+                        weekly_schema=WeeklyHabitSchema(
+                            habit_name=habit_name,
+                            habit_description=habit_description,
+                            category=category,
+                        ),
+                    )
                 )
-            )
-            self.main_menu()
+                self.main_menu()
+                return
+        except ValidationError as e:
+            print(f"Data validation error: {e}")
+            self._create_habit_menu()
             return
 
     def _delete_habits_menu(self):
