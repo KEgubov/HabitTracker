@@ -97,6 +97,8 @@ class HabitTrackerCLI:
 
         if choice not in category_map:
             print("Invalid choice. Please select a number between 1 and 7.")
+            self._category_menu(habit_name, habit_description, type_habit)
+            return
 
         category = category_map[choice]
         try:
