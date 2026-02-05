@@ -153,6 +153,11 @@ class HabitTrackerCLI:
             self.main_menu()
             return
 
+        else:
+            print("Invalid choice. Please select a number between 1 and 3.")
+            self._delete_habits_menu()
+            return
+
     def _delete_all_habits_menu(self):
         print("=" * 10, "Do you want to delete the habit?", "=" * 10)
         print("1. Yes")
