@@ -223,6 +223,11 @@ class HabitTrackerCLI:
             self.main_menu()
             return
 
+        else:
+            print("Invalid choice. Please select a number between 1 and 3.")
+            self._view_achievements()
+            return
+
 
 if __name__ == "__main__":
     cli = HabitTrackerCLI()
