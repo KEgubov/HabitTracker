@@ -194,6 +194,11 @@ class HabitTrackerCLI:
             self.main_menu()
             return
 
+        else:
+            print("Invalid choice. Please select a number between 1 and 3.")
+            self._view_habits()
+            return
+
     def _view_achievements(self):
         print("=" * 10, "View Achievements", "=" * 10)
         print("1. Show Achievement by ID")
