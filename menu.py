@@ -39,6 +39,10 @@ class HabitTrackerCLI:
             self._view_achievements()
         elif choice == "6":
             exit("Thank you for using this program!")
+        else:
+            print("Invalid choice. Please select a number between 1 and 6.")
+            self.main_menu()
+            return
 
     def _create_habit_menu(self):
         print("=" * 10, "CREATE HABIT", "=" * 10)
